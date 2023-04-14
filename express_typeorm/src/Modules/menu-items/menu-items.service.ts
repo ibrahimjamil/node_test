@@ -86,6 +86,28 @@ export class MenuItemsService {
   */
 
   async getMenuItems() {
-    throw new Error('TODO in task 3');
+    const menuItems: any = await this.menuItemRepository
+    .createQueryBuilder("menu_item")
+    .orderBy("menu_item.id")
+    .getMany();
+
+  const menuItemsMap = new Map(menuItems.map((menuItem: any) => [menuItem.id, menuItem]));
+
+  const roots: MenuItem[] = [];
+  menuItems.forEach((menuItem: any) => {
+    if (menuItem.parentId === null) {
+      roots.push(menuItem);
+    } else {
+      const parent = menuItemsMap.get(menuItem.parentId);
+    //   if (parent) {
+    //     if (!parent['children']) {
+    //       parent.children = [];
+    //     }
+    //     parent.children.push(menuItem);
+    //   }
+    }
+  });
+
+  return roots;
   }
 }
